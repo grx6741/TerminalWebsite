@@ -9,6 +9,9 @@
 #include "sokol_debugtext.h"
 #include "sokol_color.h"
 
+#include "string.h"
+#include "stdio.h"
+
 #include "shaders_h/triangle.glsl.h"
 #include "console.h"
 
@@ -176,6 +179,10 @@ static void event(const sapp_event* e) {
 		// TODO: Feature Req -- Add ctrl+backspace functionality
 		case SAPP_KEYCODE_BACKSPACE:
 		    console_pop_input_text(&state.console);
+		    break;
+		case SAPP_KEYCODE_ENTER:
+		    console_read_buffer(&state.console);
+		    // console_print(&state.console, "Hello World", 11);
 		    break;
 		default:
 		    break;

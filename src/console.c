@@ -1,5 +1,4 @@
 #include "console.h"
-#include "commands.h"
 
 #include <sokol_app.h>
 #include <sokol_gfx.h>
@@ -20,6 +19,10 @@
 #define PROMPT "grx@gowrish:> "
 #define PROMPT_LEN strlen(PROMPT)
 
+
+#define LOG(x) printf("[%d] %s: %d\n", __LINE__, #x, x)
+// #define LOG(x)
+
 Console console_init() {
     // setup sokol-debugtext
     sdtx_setup(&(sdtx_desc_t){
@@ -39,11 +42,12 @@ Console console_init() {
 	.state = CONSOLE_DONE,
 	.buffer = {CURSOR},
 	.buffer_len = 0,
-	.stdout = (STDout) {
+	.std_out = (STDout) {
 	    .lines_count = 1,
 	    .lines[0] = (Line) {
 		.buffer = PROMPT,
-		.buffer_len = PROMPT_LEN
+		.buffer_len = PROMPT_LEN,
+		.is_prompt = true
 	    }
 	}
     };
@@ -56,17 +60,47 @@ void console_draw(Console console) {
     sdtx_canvas(sapp_width() * scale_x, sapp_height() * scale_y);
 
     sdtx_origin(0.4f, 0.4f);
-    sdtx_home();
+    // sdtx_home();
     sdtx_font(CURRENT_FONT);
     sdtx_color1i(0xFF00FF00);
-    sdtx_puts(console.prompt);
+    for (int i = 0; i < console.std_out.lines_count; i++) {
+	Line line = console.std_out.lines[i];
+	sdtx_puts(line.buffer);
+
+	if (!line.is_prompt) sdtx_crlf();
+    }
+    // sdtx_puts(console.prompt);
+    // sdtx_crlf();
     
     // +1 for including the cursor as well
     sdtx_printf("%.*s", (int)console.buffer_len + 1, console.buffer);
 }
 
-Command console_read_buffer(Console* console) {
-    return (Command)0;
+void console_read_buffer(Console* console) {
+
+    Line* last_line = &console->std_out.lines[console->std_out.lines_count];
+    strncpy(last_line->buffer + last_line->buffer_len, console->buffer, console->buffer_len);
+
+    TokenArray tarr = get_all_tokens(console->buffer, console->buffer_len);
+    console->std_out.lines_count++;
+
+    Token program_tok = tarr.tokens[0];
+    size_t program_tok_size = program_tok.end - program_tok.start + 1;
+    char program_name[program_tok_size];
+    strncpy(program_name, console->buffer + program_tok.start, program_tok_size);
+
+    console_print(console, program_name, program_tok_size);
+
+    console->std_out.lines[console->std_out.lines_count++] = (Line) {
+	.buffer = PROMPT,
+	.buffer_len = PROMPT_LEN,
+	.is_prompt = true
+    };
+
+    // Clear the input buffer
+    console->buffer_len = 0;
+    // Reset the cursor
+    console->buffer[console->buffer_len] = CURSOR;
 }
 
 void console_append_input_text(Console* console, char input_char) {
@@ -82,4 +116,15 @@ void console_pop_input_text(Console* console) {
 	console->buffer_len--;
 	console->buffer[console->buffer_len] = CURSOR;
     }
+}
+
+
+void console_print(Console* console, char* buffer, size_t buffer_len) {
+    if (console->std_out.lines_count >= MAX_LINES_COUNT) return;
+    if (buffer_len >= MAX_LINE_BUFFER_LEN) return;
+
+    size_t curr_line = console->std_out.lines_count;
+    strncpy(console->std_out.lines[curr_line].buffer, buffer, buffer_len);
+
+    console->std_out.lines_count++;
 }

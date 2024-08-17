@@ -1,9 +1,9 @@
 # Set it to 1 for da Web
 web = 1
 
-cc = clang
+cc = gcc
 build = build
-bin = index
+bin = main
 c_src = $(wildcard src/*.c)
 h_src = $(wildcard src/*.h)
 output = $(build)/$(bin)
@@ -36,6 +36,7 @@ ifeq ($(web), 1)
 	cc := emcc
 	shader_lang := glsl300es
 	macros := -DSOKOL_GLES3
+	bin := index
 	libs := -sUSE_WEBGL2 --shell-file=res/shell.html
 	output := $(build)/$(bin).html
 endif
@@ -53,7 +54,7 @@ source: $(output)
 shader: $(shader_out)
 
 $(output): $(c_src) $(h_src)
-	$(cc) -o $(output) $(c_src) $(headers) $(libs) $(macros)
+	bear -- $(cc) -o $(output) $(c_src) $(headers) $(libs) $(macros)
 
 test:
 	$(cc) -o $(build)/test tests/parser_test.c src/parser.c -I./src/
