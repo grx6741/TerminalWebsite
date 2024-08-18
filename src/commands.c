@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define NOT_IMPLEMENTED console_print(console, text_format("Command %s: Not Implemented yet", program_str.buffer));
+
 // All valid commands' funciton pointers
 
 void command_who_am_i(Console* console, TokenArray tarr) {
@@ -38,15 +40,51 @@ void command_help(Console* console, TokenArray tarr) {
     }
 }
 
+void command_clear(Console* console, TokenArray tarr) {
+    Token program_name = tarr.tokens[0];
+    String program_str = tokenToString(console->buffer, program_name);
+
+    NOT_IMPLEMENTED;
+}
+
+void command_cd(Console* console, TokenArray tarr) {
+    Token program_name = tarr.tokens[0];
+    String program_str = tokenToString(console->buffer, program_name);
+
+    NOT_IMPLEMENTED;
+}
+
+void command_ls(Console* console, TokenArray tarr) {
+    Token program_name = tarr.tokens[0];
+    String program_str = tokenToString(console->buffer, program_name);
+
+    NOT_IMPLEMENTED;
+}
+
+void command_view(Console* console, TokenArray tarr) {
+    Token program_name = tarr.tokens[0];
+    String program_str = tokenToString(console->buffer, program_name);
+
+    NOT_IMPLEMENTED;
+}
+
 void init_commands() {
     // Table for command as string
     _valid_commands[COMMAND_WHO_AM_I] = "whoami";
     _valid_commands[COMMAND_HELP] = "help";
+    _valid_commands[COMMAND_CLEAR] = "clear";
+    _valid_commands[COMMAND_CD] = "cd";
+    _valid_commands[COMMAND_LS] = "ls";
+    _valid_commands[COMMAND_VIEW] = "view";
 
     // Table for command as function ptr
 
     _valid_commands_funcs[COMMAND_WHO_AM_I] = command_who_am_i;
     _valid_commands_funcs[COMMAND_HELP] = command_help;
+    _valid_commands_funcs[COMMAND_CLEAR] = command_clear;
+    _valid_commands_funcs[COMMAND_CD] = command_cd;
+    _valid_commands_funcs[COMMAND_LS] = command_ls;
+    _valid_commands_funcs[COMMAND_VIEW] = command_view;
 }
 
 Command match_program_name(String program_name) {

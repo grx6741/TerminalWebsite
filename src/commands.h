@@ -7,6 +7,10 @@ typedef enum {
     COMMAND_INVALID,
     COMMAND_WHO_AM_I,
     COMMAND_HELP,
+    COMMAND_CLEAR,
+    COMMAND_CD,
+    COMMAND_LS,
+    COMMAND_VIEW,
     COMMANDS_COUNT
 } Command;
 
