@@ -3,7 +3,7 @@
 #include <stddef.h>
 
 typedef struct {
-    char* buffer;
+    const char* buffer;
     size_t buffer_len; // Including the Null termination Character
 } String;
 

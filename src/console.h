@@ -1,7 +1,7 @@
 #pragma once
 
-#include "commands.h"
 #include "stdout.h"
+#include "utility.h"
 
 #define CURSOR ('}' + 2)
 

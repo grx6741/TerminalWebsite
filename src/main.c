@@ -9,9 +9,6 @@
 #include "sokol_debugtext.h"
 #include "sokol_color.h"
 
-#include "string.h"
-#include "stdio.h"
-
 #include "shaders_h/triangle.glsl.h"
 #include "console.h"
 
@@ -162,10 +159,6 @@ static void frame(void) {
 }
 
 static void event(const sapp_event* e) {
-    if (e->type == SAPP_EVENTTYPE_RESIZED) {
-        create_offscreen_pass(e->framebuffer_width, e->framebuffer_height);
-    }
-
     switch (e->type) {
 	case SAPP_EVENTTYPE_RESIZED:
 	    create_offscreen_pass(e->framebuffer_width, e->framebuffer_height);
@@ -205,8 +198,8 @@ sapp_desc sokol_main(int argc, char* argv[]) {
         .init_cb = init,
         .frame_cb = frame,
         .cleanup_cb = cleanup,
-        .width = 1024,
-        .height = 600,
+        .width = 1980,
+        .height = 1080,
 	.event_cb = event,
         .window_title = "debugtext-sapp",
         .icon.sokol_default = true,

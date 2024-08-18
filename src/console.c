@@ -1,4 +1,6 @@
 #include "console.h"
+#include "parser.h"
+#include "commands.h"
 
 #include <sokol_app.h>
 #include <sokol_gfx.h>
@@ -36,6 +38,9 @@ Console console_init() {
         },
         .logger.func = slog_func,
     });
+
+    // Fill in the tables u dumbass
+    init_commands();
 
     return (Console) {
 	.prompt = PROMPT,
@@ -89,18 +94,25 @@ void console_read_buffer(Console* console) {
     // char program_name[program_tok_size];
     // strncpy(program_name, console->buffer + program_tok.start, program_tok_size);
 
-    Token program_name = tarr.tokens[0];
-    String program_str = tokenToString(console->buffer, program_name);
+    // Token program_name = tarr.tokens[0];
+    // String program_str = tokenToString(console->buffer, program_name);
 
+    // console_print(console, text_format("\n"));
+
+    // console_print(console, text_format("Program: %s", program_str.buffer));
+
+    // for (int i = 1; i < tarr.tokens_count; i++) {
+    //     Token arg_name = tarr.tokens[i];
+    //     String arg_str = tokenToString(console->buffer, arg_name);
+    //     console_print(console, text_format("Arguement %d: %s", i, arg_str.buffer));
+    // }
+
+    // console_print(console, text_format("\n"));
+
+    // Match program name with all available commands
     console_print(console, text_format("\n"));
 
-    console_print(console, text_format("Program: %s", program_str.buffer));
-
-    for (int i = 1; i < tarr.tokens_count; i++) {
-	Token arg_name = tarr.tokens[i];
-	String arg_str = tokenToString(console->buffer, arg_name);
-	console_print(console, text_format("Arguement %d: %s", i, arg_str.buffer));
-    }
+    execute_command(console, tarr);
 
     console_print(console, text_format("\n"));
 

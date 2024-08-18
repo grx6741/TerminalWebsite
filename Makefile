@@ -1,7 +1,7 @@
 # Set it to 1 for da Web
 web = 1
 
-cc = gcc
+cc = clang
 build = build
 bin = main
 c_src = $(wildcard src/*.c)
