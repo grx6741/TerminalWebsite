@@ -1,7 +1,9 @@
 #pragma once
 
 #include <stdint.h>
-#include <stdlib.h>
+#include <stddef.h>
+
+#include "utility.h"
 
 #define MAX_TOKENS 10
 
@@ -18,6 +20,8 @@ typedef struct {
 void add_token(TokenArray* tarr, Token token);
 void print_tokens_arr(TokenArray tarr, char* buffer, size_t buffer_len);
 TokenArray get_all_tokens(char* buffer, size_t buffer_len);
+
+String tokenToString(char* buffer, Token token);
 
 // returns of next non white space character's index in a buffer
 uint32_t _next_nonwp(char* buffer, size_t buffer_len, uint32_t start);

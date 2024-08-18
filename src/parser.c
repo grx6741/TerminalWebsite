@@ -1,5 +1,8 @@
 #include "parser.h"
+
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 #include <ctype.h>
 
 // #define LOG(x) printf("[%d] %s: %d\n", __LINE__, #x, x)
@@ -57,4 +60,17 @@ TokenArray get_all_tokens(char* buffer, size_t buffer_len) {
     }
 
     return tarr;
+}
+
+String tokenToString(char* buffer, Token token) {
+    size_t token_size = token.end - token.start + 1;
+    char* token_string = malloc(sizeof(char) * (token_size + 1));
+
+    memcpy(token_string, buffer + token.start, token_size);
+    token_string[token_size] = '\0';
+
+    return (String) {
+	.buffer = token_string,
+	.buffer_len = token_size + 1
+    };
 }

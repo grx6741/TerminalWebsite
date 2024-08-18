@@ -84,12 +84,25 @@ void console_read_buffer(Console* console) {
     TokenArray tarr = get_all_tokens(console->buffer, console->buffer_len);
     console->std_out.lines_count++;
 
-    Token program_tok = tarr.tokens[0];
-    size_t program_tok_size = program_tok.end - program_tok.start + 1;
-    char program_name[program_tok_size];
-    strncpy(program_name, console->buffer + program_tok.start, program_tok_size);
+    // Token program_tok = tarr.tokens[0];
+    // size_t program_tok_size = program_tok.end - program_tok.start + 1;
+    // char program_name[program_tok_size];
+    // strncpy(program_name, console->buffer + program_tok.start, program_tok_size);
 
-    console_print(console, program_name, program_tok_size);
+    Token program_name = tarr.tokens[0];
+    String program_str = tokenToString(console->buffer, program_name);
+
+    console_print(console, text_format("\n"));
+
+    console_print(console, text_format("Program: %s", program_str.buffer));
+
+    for (int i = 1; i < tarr.tokens_count; i++) {
+	Token arg_name = tarr.tokens[i];
+	String arg_str = tokenToString(console->buffer, arg_name);
+	console_print(console, text_format("Arguement %d: %s", i, arg_str.buffer));
+    }
+
+    console_print(console, text_format("\n"));
 
     console->std_out.lines[console->std_out.lines_count++] = (Line) {
 	.buffer = PROMPT,
@@ -119,12 +132,12 @@ void console_pop_input_text(Console* console) {
 }
 
 
-void console_print(Console* console, char* buffer, size_t buffer_len) {
+void console_print(Console* console, String str) {
     if (console->std_out.lines_count >= MAX_LINES_COUNT) return;
-    if (buffer_len >= MAX_LINE_BUFFER_LEN) return;
+    if (str.buffer_len >= MAX_LINE_BUFFER_LEN) return;
 
     size_t curr_line = console->std_out.lines_count;
-    strncpy(console->std_out.lines[curr_line].buffer, buffer, buffer_len);
+    strncpy(console->std_out.lines[curr_line].buffer, str.buffer, str.buffer_len);
 
     console->std_out.lines_count++;
 }
